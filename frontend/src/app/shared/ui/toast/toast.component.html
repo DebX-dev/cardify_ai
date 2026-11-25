@@ -1,0 +1,34 @@
+<div
+  class="fixed bottom-5 right-5 z-50 flex flex-col gap-2.5 max-w-sm w-full px-4 sm:px-0 no-print"
+  role="status"
+  aria-live="polite"
+>
+  @for (item of toast.toasts(); track item.id) {
+    <div
+      class="glass-panel rounded-xl px-4 py-3 flex items-center justify-between gap-3 text-sm shadow-xl"
+      [class.border-rose-400]="item.kind === 'error'"
+      [class.border-emerald-400]="item.kind === 'success'"
+    >
+      <span class="text-slate-900 dark:text-slate-100">{{ item.message }}</span>
+      <div class="flex items-center gap-2 shrink-0">
+        @if (item.retryable) {
+          <button
+            type="button"
+            (click)="toast.triggerRetry(item.id)"
+            class="text-xs font-semibold text-violet-600 dark:text-violet-300 hover:underline cursor-pointer"
+          >
+            Retry
+          </button>
+        }
+        <button
+          type="button"
+          (click)="toast.dismiss(item.id)"
+          aria-label="Dismiss notification"
+          class="text-xs text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 cursor-pointer"
+        >
+          ✕
+        </button>
+      </div>
+    </div>
+  }
+</div>

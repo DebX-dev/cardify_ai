@@ -1,0 +1,108 @@
+<app-confetti [burstKey]="store.confettiBurstKey()" />
+
+<div class="min-h-screen flex flex-col">
+  <header class="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-5 flex items-center justify-between gap-4 no-print">
+    <div class="flex items-center gap-3">
+      <div
+        class="h-10 w-10 rounded-xl bg-gradient-to-br from-indigo-500 via-violet-500 to-fuchsia-500 flex items-center justify-center text-white font-display font-bold text-lg shadow-lg shadow-indigo-500/25"
+        aria-hidden="true"
+      >
+        C
+      </div>
+      <div>
+        <div class="font-display text-lg font-bold tracking-tight text-slate-900 dark:text-white">
+          Cardify AI
+        </div>
+        <p class="text-xs text-slate-500 dark:text-slate-400">
+          Card + Simplify · AI Scorecard Engine
+        </p>
+      </div>
+    </div>
+
+    <nav class="flex items-center gap-2" aria-label="Workspace controls">
+      <app-button
+        variant="secondary"
+        size="sm"
+        (click)="themeService.cycleTheme()"
+        aria-label="Toggle color theme"
+      >
+        Theme: {{ themeService.theme() }}
+      </app-button>
+      <app-button
+        variant="secondary"
+        size="sm"
+        (click)="drawerOpen.set(true)"
+      >
+        History ({{ historyService.runs().length }})
+      </app-button>
+    </nav>
+  </header>
+
+  <main class="max-w-6xl w-full mx-auto px-4 sm:px-6 lg:px-8 pb-20 space-y-10 flex-1">
+    <section class="text-center max-w-2xl mx-auto pt-4 space-y-3">
+      <h1
+        class="hero-title font-display font-bold tracking-tight text-slate-900 dark:text-white leading-tight"
+      >
+        Turn a product name into a card that sells.
+      </h1>
+      <p class="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed">
+        Generate 3 distinct product card variants, benchmark them with a 5-axis AI Interview Scorecard, and export in one click.
+      </p>
+    </section>
+
+    <app-product-form
+      class="block"
+      [loading]="store.loading()"
+      [canBypassCache]="store.run() !== null"
+      [preset]="samplePreset()"
+      (submitted)="onGenerate($event)"
+    />
+
+    @if (store.loading()) {
+      <app-skeleton class="block pt-2" />
+    } @else if (store.run(); as activeRun) {
+      @if (store.winnerVariant(); as winner) {
+        <app-winner-banner
+          class="block"
+          [run]="activeRun"
+          [winner]="winner"
+          [cacheSource]="store.cacheSource()"
+          (analyzeSeo)="store.analyzeSeo($event)"
+        />
+      }
+
+      <app-variant-grid
+        class="block"
+        [items]="store.rankedVariants()"
+        [runInput]="activeRun.input"
+        [regeneratingId]="store.regeneratingId()"
+        (pickWinner)="store.pickWinner($event)"
+        (regenerate)="store.regenerateVariant($event.variantId, $event.feedback)"
+        (transformTone)="store.transformTone($event.variantId, $event.tone)"
+        (analyzeSeo)="store.analyzeSeo($event)"
+      />
+
+      <section class="grid grid-cols-1 lg:grid-cols-2 gap-6" aria-label="Comparison and SEO insights">
+        <app-radar-chart
+          class="block"
+          [variants]="activeRun.variants"
+          [scorecard]="activeRun.scorecard"
+        />
+        <app-seo-panel
+          class="block"
+          [analysis]="store.seoAnalysis()"
+          [loading]="store.seoLoading()"
+          (analyze)="store.analyzeSeo()"
+        />
+      </section>
+    } @else {
+      <app-empty-state class="block pt-3" (samplePicked)="onSamplePicked($event)" />
+    }
+  </main>
+</div>
+
+<app-history-drawer
+  [open]="drawerOpen()"
+  (closed)="drawerOpen.set(false)"
+  (runSelected)="onHistorySelected($event)"
+/>

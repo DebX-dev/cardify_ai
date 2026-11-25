@@ -1,0 +1,62 @@
+<div class="glass-panel rounded-2xl p-6 h-full flex flex-col gap-4">
+  <div class="flex items-start justify-between gap-3">
+    <div>
+      <h3 class="font-display text-lg font-semibold text-slate-900 dark:text-white">
+        SEO Keyword Analyzer
+      </h3>
+      <p class="text-xs text-slate-500 dark:text-slate-400">
+        Keyword density &amp; missing high-intent search terms
+      </p>
+    </div>
+    <app-button
+      size="sm"
+      variant="secondary"
+      [loading]="loading()"
+      (click)="analyze.emit()"
+    >
+      {{ analysis() ? 'Re-analyze SEO' : 'Analyze Winner SEO' }}
+    </app-button>
+  </div>
+
+  @if (analysis(); as seo) {
+    <p class="text-xs text-slate-600 dark:text-slate-300 bg-slate-100/80 dark:bg-slate-800/70 rounded-xl p-3">
+      {{ seo.summary }}
+    </p>
+
+    <div class="space-y-2">
+      <div class="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+        Top Keywords ({{ seo.topKeywords.length }})
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+        @for (kw of seo.topKeywords; track kw.keyword) {
+          <div
+            class="flex items-center justify-between rounded-xl border border-slate-200/70 dark:border-slate-700/70 px-3 py-2 text-xs"
+          >
+            <span class="font-medium text-slate-800 dark:text-slate-100">{{ kw.keyword }}</span>
+            <div class="flex items-center gap-2">
+              <span class="tabular-nums text-slate-500">{{ kw.densityPercent }}%</span>
+              <app-tag [tone]="kw.relevance === 'high' ? 'success' : kw.relevance === 'medium' ? 'brand' : 'neutral'">
+                {{ kw.relevance }}
+              </app-tag>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+
+    <div class="space-y-1.5 mt-auto">
+      <div class="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+        3 Missing Keywords to Add
+      </div>
+      <div class="flex flex-wrap gap-1.5">
+        @for (missing of seo.missingKeywords; track missing) {
+          <app-tag tone="gold">+ {{ missing }}</app-tag>
+        }
+      </div>
+    </div>
+  } @else {
+    <div class="flex-1 flex items-center justify-center rounded-xl border border-dashed border-slate-300/80 dark:border-slate-700/80 p-6 text-center text-xs text-slate-500 dark:text-slate-400">
+      Click <strong>Analyze Winner SEO</strong> (or <strong>SEO</strong> on any card) to extract keyword density and 3 missing keywords.
+    </div>
+  }
+</div>

@@ -1,0 +1,25 @@
+<div class="glass-panel rounded-2xl px-6 py-10 sm:px-10 sm:py-12 text-center max-w-3xl mx-auto">
+  <div
+    class="mx-auto mb-5 flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 via-violet-500 to-fuchsia-500 text-white shadow-md shadow-indigo-500/20 text-lg"
+    aria-hidden="true"
+  >
+    ✦
+  </div>
+  <h2 class="font-display text-xl sm:text-2xl font-semibold text-slate-900 dark:text-white tracking-tight">
+    Ready to craft 3 scored product cards
+  </h2>
+  <p class="mt-2.5 text-sm text-slate-600 dark:text-slate-300 max-w-lg mx-auto leading-relaxed">
+    Enter a product name and category above, or pick a quick preset below to preview the generator and scorecard.
+  </p>
+  <div class="mt-7 flex flex-wrap items-center justify-center gap-2.5">
+    <app-button variant="secondary" size="sm" (click)="samplePicked.emit({ name: 'Wireless Noise-Canceling Mouse', category: 'Electronics', tone: 'Auto' })">
+      Wireless Mouse
+    </app-button>
+    <app-button variant="secondary" size="sm" (click)="samplePicked.emit({ name: 'Matcha Ceremonial Tin', category: 'Food & Beverage', tone: 'Luxury' })">
+      Matcha Tin
+    </app-button>
+    <app-button variant="secondary" size="sm" (click)="samplePicked.emit({ name: 'Modular Desk Organizer', category: 'Home Office', tone: 'Minimal' })">
+      Desk Organizer
+    </app-button>
+  </div>
+</div>

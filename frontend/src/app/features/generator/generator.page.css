@@ -1,0 +1,8 @@
+/* generator.page styles.
+ * Layout uses Tailwind utilities in generator.page.html; shared classes
+ * (glass-panel, font-display) live in src/styles.css. */
+
+/* Fluid hero headline: scales between mobile and desktop sizes. */
+.hero-title {
+  font-size: clamp(1.9rem, 4vw, 3rem);
+}

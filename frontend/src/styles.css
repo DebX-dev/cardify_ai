@@ -1,0 +1,91 @@
+@import "tailwindcss";
+@import "@fontsource/inter/400.css";
+@import "@fontsource/inter/500.css";
+@import "@fontsource/inter/600.css";
+@import "@fontsource/inter/700.css";
+@import "@fontsource/fraunces/600.css";
+@import "@fontsource/fraunces/700.css";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: "Inter", system-ui, -apple-system, sans-serif;
+  --font-display: "Fraunces", Georgia, serif;
+}
+
+:root {
+  color-scheme: light;
+}
+
+html.dark {
+  color-scheme: dark;
+}
+
+body {
+  font-family: var(--font-sans);
+  min-height: 100vh;
+  background-color: #f8f7ff;
+  background-image:
+    radial-gradient(at 10% 10%, rgba(99, 102, 241, 0.22) 0px, transparent 55%),
+    radial-gradient(at 88% 12%, rgba(217, 70, 239, 0.18) 0px, transparent 50%),
+    radial-gradient(at 50% 92%, rgba(139, 92, 246, 0.18) 0px, transparent 55%);
+  background-attachment: fixed;
+  color: #0f172a;
+}
+
+html.dark body {
+  background-color: #090915;
+  background-image:
+    radial-gradient(at 12% 12%, rgba(79, 70, 229, 0.28) 0px, transparent 55%),
+    radial-gradient(at 88% 18%, rgba(147, 51, 234, 0.24) 0px, transparent 50%),
+    radial-gradient(at 50% 90%, rgba(190, 24, 93, 0.16) 0px, transparent 55%);
+  color: #f1f5f9;
+}
+
+/* Shared across components. Component-only styles live in each component's .css file. */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.78);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.75),
+    0 16px 40px -18px rgba(79, 70, 229, 0.16);
+}
+
+html.dark .glass-panel {
+  background: rgba(15, 23, 42, 0.62);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    0 20px 50px -20px rgba(0, 0, 0, 0.65);
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-pulse {
+    animation: none !important;
+  }
+  * {
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@media print {
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+  .no-print {
+    display: none !important;
+  }
+  .glass-panel {
+    background: #ffffff !important;
+    box-shadow: none !important;
+    border: 1px solid #cbd5e1 !important;
+    backdrop-filter: none !important;
+  }
+}

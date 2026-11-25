@@ -1,0 +1,24 @@
+<div class="space-y-2.5 pt-3 border-t border-slate-200/70 dark:border-slate-700/60">
+  <div class="text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+    AI Interview Scorecard
+  </div>
+  @for (row of criteria; track row.key) {
+    <div class="flex items-start gap-3">
+      <app-score-ring
+        [value]="scorecard().scores[row.key]"
+        [label]="row.label"
+        [size]="42"
+        [strokeWidth]="4"
+      />
+      <div class="min-w-0 flex-1">
+        <div class="flex items-center justify-between gap-2 text-xs font-medium text-slate-800 dark:text-slate-100">
+          <span>{{ row.label }}</span>
+          <span class="text-[11px] text-slate-400">{{ row.weight }}</span>
+        </div>
+        <p class="text-xs text-slate-600 dark:text-slate-300 leading-snug mt-0.5">
+          {{ scorecard().rationales[row.key] }}
+        </p>
+      </div>
+    </div>
+  }
+</div>

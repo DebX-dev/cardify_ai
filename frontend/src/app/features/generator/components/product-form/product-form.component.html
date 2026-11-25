@@ -1,0 +1,120 @@
+<form
+  [formGroup]="form"
+  (ngSubmit)="onSubmit()"
+  class="glass-panel rounded-2xl p-6 sm:p-8 space-y-6 no-print"
+  aria-label="Product card generator form"
+>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div>
+      <label
+        for="product-name"
+        class="block text-xs font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-300 mb-1.5"
+      >
+        Product Name <span class="text-rose-500">*</span>
+      </label>
+      <input
+        #nameInput
+        id="product-name"
+        type="text"
+        formControlName="name"
+        placeholder="e.g. Wireless Noise-Canceling Mouse"
+        maxlength="100"
+        class="w-full rounded-xl border border-slate-200/90 dark:border-slate-700 bg-white/85 dark:bg-slate-900/75 px-4 py-2.5 text-sm text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-violet-500"
+      />
+      @if (form.controls.name.touched && form.controls.name.invalid) {
+        <p class="mt-1 text-xs text-rose-500">Product name is required (max 100 chars).</p>
+      }
+    </div>
+
+    <div>
+      <label
+        for="product-category"
+        class="block text-xs font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-300 mb-1.5"
+      >
+        Category <span class="text-rose-500">*</span>
+      </label>
+      <input
+        id="product-category"
+        type="text"
+        formControlName="category"
+        placeholder="e.g. Electronics, Home Office, Skincare"
+        maxlength="60"
+        class="w-full rounded-xl border border-slate-200/90 dark:border-slate-700 bg-white/85 dark:bg-slate-900/75 px-4 py-2.5 text-sm text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-violet-500"
+      />
+      @if (form.controls.category.touched && form.controls.category.invalid) {
+        <p class="mt-1 text-xs text-rose-500">Category is required (max 60 chars).</p>
+      }
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-start">
+    <div>
+      <label
+        for="product-tone"
+        class="block text-xs font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-300 mb-1.5"
+      >
+        Tone
+      </label>
+      <select
+        id="product-tone"
+        formControlName="tone"
+        class="w-full rounded-xl border border-slate-200/90 dark:border-slate-700 bg-white/85 dark:bg-slate-900/75 px-4 py-2.5 text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-violet-500"
+      >
+        @for (tone of tones; track tone) {
+          <option [value]="tone">{{ tone }}</option>
+        }
+      </select>
+    </div>
+
+    <div class="md:col-span-2">
+      <div class="flex items-center justify-between mb-1.5">
+        <label
+          for="extra-context"
+          class="block text-xs font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-300"
+        >
+          Extra Context <span class="font-normal normal-case text-slate-400">(optional)</span>
+        </label>
+        <span class="text-[11px] tabular-nums text-slate-400">
+          {{ (form.controls.extraContext.value || '').length }}/200
+        </span>
+      </div>
+      <input
+        id="extra-context"
+        type="text"
+        formControlName="extraContext"
+        maxlength="200"
+        placeholder="e.g. target: remote workers, silent clicks, USB-C fast charge"
+        class="w-full rounded-xl border border-slate-200/90 dark:border-slate-700 bg-white/85 dark:bg-slate-900/75 px-4 py-2.5 text-sm text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-violet-500"
+      />
+    </div>
+  </div>
+
+  <div class="flex flex-wrap items-center justify-between gap-3 pt-1">
+    <p class="text-xs text-slate-500 dark:text-slate-400">
+      Press <kbd class="rounded border border-slate-300 dark:border-slate-700 px-1.5 py-0.5 text-[11px]">/</kbd> to focus · Instant local cache on repeat queries
+    </p>
+
+    <div class="flex items-center gap-2">
+      @if (canBypassCache()) {
+        <app-button
+          type="button"
+          variant="secondary"
+          size="md"
+          [disabled]="loading()"
+          (click)="onSubmit(true)"
+        >
+          Refresh from AI
+        </app-button>
+      }
+      <app-button
+        type="submit"
+        variant="primary"
+        size="lg"
+        [loading]="loading()"
+        [disabled]="form.invalid"
+      >
+        {{ loading() ? 'Generating & Scoring...' : 'Generate Details (3 Variants) →' }}
+      </app-button>
+    </div>
+  </div>
+</form>

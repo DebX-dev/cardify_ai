@@ -1,0 +1,17 @@
+<section aria-label="Ranked product card variants" class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+  @for (item of items(); track item.variant.id) {
+    <app-variant-card
+      [rank]="item.rank"
+      [variant]="item.variant"
+      [scorecard]="item.score"
+      [runInput]="runInput()"
+      [isWinner]="item.isWinner"
+      [isHumanPick]="item.isHumanPick"
+      [busy]="regeneratingId() === item.variant.id"
+      (pickWinner)="pickWinner.emit($event)"
+      (regenerate)="regenerate.emit($event)"
+      (transformTone)="transformTone.emit($event)"
+      (analyzeSeo)="analyzeSeo.emit($event)"
+    />
+  }
+</section>

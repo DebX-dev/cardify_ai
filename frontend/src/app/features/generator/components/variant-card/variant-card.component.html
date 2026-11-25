@@ -1,0 +1,111 @@
+<app-card [highlighted]="isWinner() || isHumanPick()" class="block h-full animate-reveal">
+  <article class="p-5 sm:p-6 flex flex-col h-full gap-4">
+    <header class="flex items-start justify-between gap-3">
+      <div class="space-y-1.5">
+        <div class="flex flex-wrap items-center gap-1.5">
+          <app-tag [tone]="rank() === 1 ? 'gold' : 'brand'">
+            #{{ rank() }} · {{ variant().tone }}
+          </app-tag>
+          @if (isWinner()) {
+            <app-tag tone="gold">★ AI Winner</app-tag>
+          }
+          @if (isHumanPick()) {
+            <app-tag tone="success">✓ My Pick</app-tag>
+          }
+        </div>
+        <app-tag [tone]="verdictTone()">{{ scorecard().verdict }}</app-tag>
+      </div>
+
+      <app-score-ring
+        [value]="scorecard().total"
+        label="Weighted total"
+        [size]="58"
+        [strokeWidth]="5"
+      />
+    </header>
+
+    <div class="space-y-2">
+      <h3 class="font-display text-xl font-semibold leading-snug text-slate-900 dark:text-white">
+        {{ variant().title }}
+      </h3>
+      <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+        {{ variant().description }}
+      </p>
+    </div>
+
+    <div class="flex flex-wrap gap-1.5">
+      @for (tag of variant().tags; track tag) {
+        <app-tag tone="neutral">#{{ tag }}</app-tag>
+      }
+    </div>
+
+    <app-scorecard-panel [scorecard]="scorecard()" />
+
+    <footer class="mt-auto pt-3 border-t border-slate-200/70 dark:border-slate-700/60 space-y-2.5 no-print">
+      <div class="flex flex-wrap gap-1.5">
+        <app-button size="sm" variant="secondary" (click)="copy('json')">Copy JSON</app-button>
+        <app-button size="sm" variant="secondary" (click)="copy('shopify')">Shopify</app-button>
+        <app-button size="sm" variant="secondary" (click)="copy('amazon')">Amazon</app-button>
+        <app-button size="sm" variant="secondary" (click)="copy('markdown')">Markdown</app-button>
+      </div>
+
+      <div class="flex flex-wrap items-center justify-between gap-2">
+        <div class="flex items-center gap-1.5">
+          <app-button
+            size="sm"
+            variant="ghost"
+            [loading]="busy()"
+            (click)="showFeedback.set(!showFeedback())"
+          >
+            ↻ Regenerate
+          </app-button>
+
+          <select
+            aria-label="Transform variant tone"
+            [disabled]="busy()"
+            (change)="onToneSelect($event)"
+            class="rounded-lg border border-slate-200 dark:border-slate-700 bg-white/80 dark:bg-slate-800/80 px-2 py-1 text-xs text-slate-700 dark:text-slate-200"
+          >
+            <option value="">Tone →</option>
+            @for (t of transformTones; track t) {
+              <option [value]="t">{{ t }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="flex items-center gap-1.5">
+          <app-button
+            size="sm"
+            variant="ghost"
+            (click)="analyzeSeo.emit(variant().id)"
+          >
+            SEO
+          </app-button>
+          <app-button
+            size="sm"
+            [variant]="isHumanPick() ? 'primary' : 'secondary'"
+            (click)="pickWinner.emit(variant().id)"
+          >
+            {{ isHumanPick() ? 'Picked' : 'Pick as winner' }}
+          </app-button>
+        </div>
+      </div>
+
+      @if (showFeedback()) {
+        <form (ngSubmit)="submitFeedback()" class="flex gap-2 pt-1">
+          <input
+            type="text"
+            [(ngModel)]="feedbackText"
+            name="feedback"
+            maxlength="200"
+            placeholder="e.g. shorter, warmer, highlight battery"
+            class="flex-1 rounded-lg border border-slate-200 dark:border-slate-700 bg-white/90 dark:bg-slate-900/80 px-3 py-1.5 text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-violet-500"
+          />
+          <app-button type="submit" size="sm" variant="primary" [loading]="busy()">
+            Go
+          </app-button>
+        </form>
+      }
+    </footer>
+  </article>
+</app-card>

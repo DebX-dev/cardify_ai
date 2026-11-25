@@ -1,0 +1,74 @@
+<div class="glass-panel rounded-2xl p-6">
+  <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
+    <div>
+      <h3 class="font-display text-lg font-semibold text-slate-900 dark:text-white">
+        Scorecard Radar Comparison
+      </h3>
+      <p class="text-xs text-slate-500 dark:text-slate-400">
+        5-axis comparison across all 3 generated variants
+      </p>
+    </div>
+    <div class="flex flex-wrap gap-3 text-xs">
+      @for (item of series(); track item.variantId) {
+        <span class="inline-flex items-center gap-1.5 text-slate-700 dark:text-slate-200">
+          <span
+            class="h-2.5 w-2.5 rounded-full"
+            [style.background-color]="item.color"
+            aria-hidden="true"
+          ></span>
+          {{ item.label }}
+        </span>
+      }
+    </div>
+  </div>
+
+  <div class="flex justify-center">
+    <svg
+      viewBox="0 0 320 280"
+      class="w-full max-w-[340px] h-auto"
+      role="img"
+      aria-label="Radar chart comparing clarity, persuasion, SEO, uniqueness, and brand fit across 3 variants"
+    >
+      @for (ring of gridRings; track ring) {
+        <polygon
+          [attr.points]="ring"
+          fill="none"
+          stroke="currentColor"
+          class="text-slate-300/70 dark:text-slate-700/80"
+          stroke-width="1"
+        />
+      }
+
+      @for (axis of axisLines; track axis.label) {
+        <line
+          x1="160"
+          y1="140"
+          [attr.x2]="axis.x2"
+          [attr.y2]="axis.y2"
+          stroke="currentColor"
+          class="text-slate-300/70 dark:text-slate-700/80"
+          stroke-width="1"
+        />
+        <text
+          [attr.x]="axis.labelX"
+          [attr.y]="axis.labelY"
+          text-anchor="middle"
+          dominant-baseline="middle"
+          class="fill-slate-600 dark:fill-slate-300 text-[11px] font-medium"
+        >
+          {{ axis.label }}
+        </text>
+      }
+
+      @for (item of series(); track item.variantId) {
+        <polygon
+          [attr.points]="item.points"
+          [attr.fill]="item.fill"
+          [attr.stroke]="item.color"
+          stroke-width="2"
+          stroke-linejoin="round"
+        />
+      }
+    </svg>
+  </div>
+</div>

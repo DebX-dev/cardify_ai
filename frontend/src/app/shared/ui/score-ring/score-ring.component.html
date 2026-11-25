@@ -1,0 +1,38 @@
+<div
+  class="relative inline-flex items-center justify-center"
+  [style.width.px]="size()"
+  [style.height.px]="size()"
+  role="img"
+  [attr.aria-label]="label() + ' score ' + value() + ' out of 100'"
+>
+  <svg [attr.width]="size()" [attr.height]="size()" class="-rotate-90">
+    <circle
+      [attr.cx]="center()"
+      [attr.cy]="center()"
+      [attr.r]="radius()"
+      fill="none"
+      stroke="currentColor"
+      class="text-slate-200/80 dark:text-slate-700/70"
+      [attr.stroke-width]="strokeWidth()"
+    />
+    <circle
+      [attr.cx]="center()"
+      [attr.cy]="center()"
+      [attr.r]="radius()"
+      fill="none"
+      [attr.stroke]="strokeColor()"
+      stroke-linecap="round"
+      [attr.stroke-width]="strokeWidth()"
+      [attr.stroke-dasharray]="circumference()"
+      [attr.stroke-dashoffset]="dashOffset()"
+      class="transition-[stroke-dashoffset] duration-300 ease-out"
+    />
+  </svg>
+  <span
+    class="absolute font-semibold tabular-nums text-slate-900 dark:text-white"
+    [class.text-xs]="size() <= 46"
+    [class.text-sm]="size() > 46"
+  >
+    {{ displayValue() }}
+  </span>
+</div>

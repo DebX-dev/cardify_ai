@@ -1,0 +1,89 @@
+@if (open()) {
+  <div
+    class="fixed inset-0 z-50 flex justify-end bg-slate-950/45 backdrop-blur-sm no-print"
+    (click)="closed.emit()"
+  >
+    <aside
+      #drawerPanel
+      role="dialog"
+      aria-modal="true"
+      aria-label="Generation history and analytics"
+      tabindex="-1"
+      (click)="$event.stopPropagation()"
+      class="w-full max-w-md h-full bg-white/95 dark:bg-slate-900/95 border-l border-slate-200 dark:border-slate-800 shadow-2xl flex flex-col overflow-hidden focus:outline-none"
+    >
+      <header class="p-5 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+        <div>
+          <h2 class="font-display text-lg font-semibold text-slate-900 dark:text-white">
+            Recent Runs &amp; Analytics
+          </h2>
+          <p class="text-xs text-slate-500 dark:text-slate-400">
+            Last 20 runs · cached locally for instant reload
+          </p>
+        </div>
+        <app-button variant="ghost" size="sm" (click)="closed.emit()" aria-label="Close history">
+          ✕ Close
+        </app-button>
+      </header>
+
+      @if (history.analytics(); as stats) {
+        <div class="grid grid-cols-3 gap-2 p-4 bg-slate-50/90 dark:bg-slate-950/60 border-b border-slate-200 dark:border-slate-800 text-center">
+          <div class="rounded-xl bg-white dark:bg-slate-900 p-2.5 border border-slate-200/70 dark:border-slate-800">
+            <div class="text-base font-bold tabular-nums text-slate-900 dark:text-white">
+              {{ stats.totalRuns }}
+            </div>
+            <div class="text-[11px] text-slate-500">Total Runs</div>
+          </div>
+          <div class="rounded-xl bg-white dark:bg-slate-900 p-2.5 border border-slate-200/70 dark:border-slate-800">
+            <div class="text-base font-bold tabular-nums text-slate-900 dark:text-white">
+              {{ stats.avgLatencyMs }}ms
+            </div>
+            <div class="text-[11px] text-slate-500">Avg Latency</div>
+          </div>
+          <div class="rounded-xl bg-white dark:bg-slate-900 p-2.5 border border-slate-200/70 dark:border-slate-800">
+            <div class="text-xs font-bold truncate text-violet-600 dark:text-violet-300 pt-0.5">
+              {{ stats.winRateByTone[0]?.tone || '—' }}
+            </div>
+            <div class="text-[11px] text-slate-500">Top Tone</div>
+          </div>
+        </div>
+      }
+
+      <div class="p-4 border-b border-slate-200 dark:border-slate-800 flex gap-2">
+        <input
+          type="search"
+          [(ngModel)]="searchQuery"
+          (ngModelChange)="onSearch()"
+          placeholder="Search product, title, or tag..."
+          aria-label="Search history runs"
+          class="flex-1 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-3 py-2 text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-violet-500"
+        />
+      </div>
+
+      <div class="flex-1 overflow-y-auto p-4 space-y-2.5">
+        @for (run of history.runs(); track run.id) {
+          <button
+            type="button"
+            (click)="selectRun(run)"
+            class="w-full text-left rounded-xl border border-slate-200/80 dark:border-slate-800 p-3.5 hover:border-violet-400 dark:hover:border-violet-500 bg-white/80 dark:bg-slate-800/40 transition cursor-pointer focus:outline-none focus:ring-2 focus:ring-violet-500"
+          >
+            <div class="flex items-center justify-between gap-2">
+              <span class="font-semibold text-sm text-slate-900 dark:text-white truncate">
+                {{ run.input.name }}
+              </span>
+              <app-tag tone="brand">{{ run.input.tone }}</app-tag>
+            </div>
+            <div class="mt-1 flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
+              <span>{{ run.input.category }}</span>
+              <span>{{ run.createdAt | date: 'short' }}</span>
+            </div>
+          </button>
+        } @empty {
+          <p class="text-center text-xs text-slate-500 py-8">
+            No saved runs match your filter yet.
+          </p>
+        }
+      </div>
+    </aside>
+  </div>
+}
